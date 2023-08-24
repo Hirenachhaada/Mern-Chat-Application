@@ -9,7 +9,7 @@ import {
   Indicator,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, DownloadIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
@@ -21,6 +21,7 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 import Lottie from "lottie-react";
 import animationData from "../animation/typing.json";
+import DownloadChat from "./DownloadChat";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const {
@@ -150,9 +151,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         `/api/message/${selectedChat._id}`,
         config
       );
+
       setMessages(data);
       setLoading(false);
-      // console.log(messages);
+      console.log(messages);
       {
         socket && socket.emit("join chat", selectedChat._id);
       }
@@ -223,6 +225,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 {getSender(user, selectedChat.users)[0].toUpperCase() +
                   getSender(user, selectedChat.users).slice(1)}
                 <ProfileModal user={getSenderFull(user, selectedChat.users)} />
+                <DownloadChat />
               </>
             ) : (
               <>
@@ -233,6 +236,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   setFetchAgain={setFetchAgain}
                   fetchMessages={fetchMessages}
                 />
+                <DownloadChat />
               </>
             )}
           </Text>
