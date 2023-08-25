@@ -5,6 +5,7 @@ import { DownloadIcon } from "@chakra-ui/icons";
 import { IconButton } from "@chakra-ui/react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 const DownloadChat = () => {
   const toast = useToast();
@@ -49,13 +50,17 @@ const DownloadChat = () => {
     a.click();
   };
   return (
-    <div>
+    <Tooltip
+      label="Download chats as text file"
+      hasArrow
+      placement="bottom-end"
+    >
       <IconButton
         onClick={downloadChats}
         display={{ base: "flex" }}
         icon={<DownloadIcon />}
       />
-    </div>
+    </Tooltip>
   );
 };
 

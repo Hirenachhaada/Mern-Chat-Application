@@ -9,6 +9,7 @@ import {
 } from "../config/ChatLogics";
 import { format } from "date-fns";
 import { ChatState } from "../Context/ChatProvider";
+import ProfileModal from "./miscellaneous/ProfileModal";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
@@ -71,14 +72,16 @@ const ScrollableChat = ({ messages }) => {
                   placement="bottom-start"
                   hasArrow
                 >
-                  <Avatar
-                    mt="7px"
-                    mr={1}
-                    size="sm"
-                    cursor="pointer"
-                    name={m.sender.name}
-                    src={m.sender.pic}
-                  />
+                  <ProfileModal user={m.sender}>
+                    <Avatar
+                      mt="7px"
+                      mr={1}
+                      size="sm"
+                      cursor="pointer"
+                      name={m.sender.name}
+                      src={m.sender.pic}
+                    />
+                  </ProfileModal>
                 </Tooltip>
               )}
               <p

@@ -22,6 +22,7 @@ import { io } from "socket.io-client";
 import Lottie from "lottie-react";
 import animationData from "../animation/typing.json";
 import DownloadChat from "./DownloadChat";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const {
@@ -225,17 +226,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 {getSender(user, selectedChat.users)[0].toUpperCase() +
                   getSender(user, selectedChat.users).slice(1)}
                 <ProfileModal user={getSenderFull(user, selectedChat.users)} />
+
                 <DownloadChat />
               </>
             ) : (
               <>
                 {selectedChat.chatName[0].toUpperCase() +
                   selectedChat.chatName.slice(1)}
-                <UpdateGroupChatModal
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  fetchMessages={fetchMessages}
-                />
+                <Tooltip
+                  label="Search User to Chat"
+                  hasArrow
+                  placement="bottom-end"
+                >
+                  <UpdateGroupChatModal
+                    fetchAgain={fetchAgain}
+                    setFetchAgain={setFetchAgain}
+                    fetchMessages={fetchMessages}
+                  />
+                </Tooltip>
                 <DownloadChat />
               </>
             )}

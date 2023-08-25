@@ -24,6 +24,7 @@ import { FormControl } from "@chakra-ui/react";
 import axios from "axios";
 import { Spinner } from "@chakra-ui/react";
 import UserListItem from "../UserAvatar/UserListItem";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,5 +1,5 @@
 import React from "react";
-import { useDisclosure } from "@chakra-ui/react";
+import { Tooltip, useDisclosure } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/button";
 import {
   Modal,
@@ -23,15 +23,17 @@ const ProfileModal = ({ user, children }) => {
   // const finalRef = React.useRef(null);
   const { darkMode } = ChatState();
   return (
-    <div>
+    <>
       {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
-        <IconButton
-          display={{ base: "flex", md: "flex" }}
-          icon={<ViewIcon />}
-          onClick={onOpen}
-        ></IconButton>
+        <Tooltip label="Click to view profile" hasArrow placement="bottom-end">
+          <IconButton
+            display={{ base: "flex", md: "flex" }}
+            icon={<ViewIcon />}
+            onClick={onOpen}
+          ></IconButton>
+        </Tooltip>
       )}
       <Modal sz="lg" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
@@ -77,7 +79,7 @@ const ProfileModal = ({ user, children }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 };
 
