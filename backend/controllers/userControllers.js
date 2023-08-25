@@ -70,5 +70,40 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send(users);
 });
 
+const updateUser = asyncHandler(async (req, res) => {
+  const id = req.params.userId;
+  console.log(id);
+  try{
+    const updated = await User.findById(id);
+    console.log(req.body.name);
+    console.log(req.body.name==undefined);
+    if(req.body.name!=undefined){
+      console.log("in if");
+      updated.name = req.body.name }
+      console.log(updated.name);
+      console.log(req.body.pic=='');
+    if(req.body.pic!=''){
+      console.log("in if pic ")
+    updated.pic = req.body.pic;
+    }
+  const updatedUser = await User.findByIdAndUpdate(id, updated);
+  res.json(updatedUser);
+}
+catch(err){
+  console.log(err);
+}
+  // const user = await User.findById(id);
+  // console.log(req.body.pic);
+  // if(user){
+  //   user.name = req.body.name || user.name;
+  //   user.pic = req.body.pic || user.pic;
+    
+  // }
+  // else{
+  //   res.status(404);
+  //   throw new Error("User not found");
+  // }
+})
 
-module.exports = { registerUser, authUser , allUsers};
+
+module.exports = { registerUser, authUser , allUsers, updateUser};

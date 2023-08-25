@@ -44,6 +44,7 @@ import ChatLoading from "../ChatLoading";
 // import { accessChat } from "../../../../backend/controllers/chatControllers";
 import UserListItem from "../UserAvatar/UserListItem";
 import { set } from "mongoose";
+import UpdateProfile from "../Authentication/UpdateProfile";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -220,6 +221,10 @@ const SideDrawer = () => {
               <ProfileModal user={user}>
                 <MenuItem>My Profile</MenuItem>
               </ProfileModal>
+              <MenuDivider />
+              <UpdateProfile user={user}>
+                <MenuItem>Update Profile</MenuItem>
+              </UpdateProfile>
               <MenuDivider />
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>
             </MenuList>
