@@ -10,9 +10,16 @@ import {
 import { format } from "date-fns";
 import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from "./miscellaneous/ProfileModal";
+import { Image } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { useState } from "react";
+import { set } from "mongoose";
+import { CalendarIcon } from "@chakra-ui/icons";
 
-const ScrollableChat = ({ messages }) => {
+const ScrollableChat = ({ messages, disappearingChat }) => {
   const { user } = ChatState();
+  const [identifyType, setIdentifyType] = useState(0);
+  var type = 0;
   const getHours = (dateObj) => {
     const date = new Date(dateObj);
     const hours = date.getHours();
@@ -28,10 +35,59 @@ const ScrollableChat = ({ messages }) => {
       return `${minutes} `;
     }
   };
-  // var crnt = new Date();
-  // var crntDate = crnt.getDate();
-  // var crntMonth = crnt.getMonth() + 1;
-  // var crntYear = crnt.getFullYear();
+
+  const getFileType = (extension) => {
+    const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+    const videoExtensions = ["mp4", "avi", "mov", "mkv"];
+    const audioExtensions = ["mp3", "wav", "ogg"];
+    const documentExtensions = ["doc", "docx", "pdf", "txt"];
+
+    if (imageExtensions.includes(extension)) {
+      return "Image";
+    } else if (videoExtensions.includes(extension)) {
+      return "Video";
+    } else if (audioExtensions.includes(extension)) {
+      return "Audio";
+    } else if (documentExtensions.includes(extension)) {
+      return "Document";
+    } else {
+      return "Unknown";
+    }
+  };
+  const Check = (url) => {
+    console.log(url);
+    const urlObject = new URL(url);
+    const extension = urlObject.pathname.split(".").pop();
+    console.log("File extension:", extension);
+    // const fileType = getFileType(extension);
+
+    const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+    const videoExtensions = ["mp4", "avi", "mov", "mkv"];
+    const audioExtensions = ["mp3", "wav", "ogg", "m4a"];
+    const documentExtensions = ["doc", "docx", "pdf", "txt"];
+
+    if (imageExtensions.includes(extension)) {
+      // setIdentifyType("Image");
+      type = 1;
+      return;
+    } else if (videoExtensions.includes(extension)) {
+      type = 2;
+      // setIdentifyType("Video");
+      return;
+    } else if (audioExtensions.includes(extension)) {
+      type = 3;
+      // setIdentifyType("Audio");
+      return;
+    } else if (documentExtensions.includes(extension)) {
+      type = 4;
+      // setIdentifyType("Document");
+      return;
+    } else {
+      type = 5;
+      // setIdentifyType("Unknown");
+      return;
+    }
+  };
   const getMins = (dateObj) => {
     const date = new Date(dateObj);
     const minutes = date.getMinutes();
@@ -63,6 +119,7 @@ const ScrollableChat = ({ messages }) => {
       {messages &&
         messages.map((m, i) => (
           <div>
+            {/* {(type = 0)} */}
             <p className="printDate">{printDate(messages, m, i)}</p>
             <div style={{ display: "flex" }} key={m._id}>
               {(isSameSender(messages, m, i, user._id) ||
@@ -96,7 +153,51 @@ const ScrollableChat = ({ messages }) => {
                   maxWidth: "75%",
                 }}
               >
+                {m.image && Check(m.image)}
+                {console.log(type)}
                 {m.content}
+                {m.image && type == 1 ? (
+                  <Box boxSize="sm">
+                    <Image src={m.image} alt="Some image" />
+                  </Box>
+                ) : (
+                  <> </>
+                )}
+                {m.image && type == 2 ? (
+                  <Box boxSize="sm">
+                    <video controls>
+                      <source src={m.image} type="video/mp4" />
+                      Your browser does not support the video element.
+                    </video>
+                  </Box>
+                ) : (
+                  <> </>
+                )}
+                {m.image && type == 3 ? (
+                  <Box width="100px">
+                    <audio controls>
+                      <source src={m.image} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </Box>
+                ) : (
+                  <> </>
+                )}
+                {m.image && type == 4 ? (
+                  <Box Boxsize="sm">
+                    <CalendarIcon fontSize={"22px"} />
+                    <a href={m.image} target="_blank" rel="noopener noreferrer">
+                      Download Document
+                    </a>
+                  </Box>
+                ) : (
+                  <> </>
+                )}
+                {m.image && type == 5 ? (
+                  <Box width="100px">Not supportable File</Box>
+                ) : (
+                  <> </>
+                )}
                 <span className="timeStamp">
                   {getHours(m.createdAt) + getMins(m.createdAt)}
                 </span>

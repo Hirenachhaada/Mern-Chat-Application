@@ -23,6 +23,17 @@ import Lottie from "lottie-react";
 import animationData from "../animation/typing.json";
 import DownloadChat from "./DownloadChat";
 import { Tooltip } from "@chakra-ui/tooltip";
+import HandleAttachment from "./miscellaneous/HandleAttachment";
+
+// import { IconButton } from "@chakra-ui/react";
+import {
+  TimeIcon,
+  ChatIcon,
+  PhoneIcon,
+  AttachmentIcon,
+} from "@chakra-ui/icons";
+import { ReactMediaRecorder } from "react-media-recorder";
+import AudioRecorder from "./miscellaneous/AudioRecorder";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const {
@@ -37,6 +48,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnnected, setSocketConnnected] = useState(false);
+  const [disappearingChat, setDisappearingChat] = useState(false);
   // const [msglen, setMsglen] = useState(0);
   // const [notification, setNotification] = useState([]);
   const toast = useToast();
@@ -119,6 +131,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           {
             content: newMessage,
             chatId: selectedChat._id,
+            disappearMode: disappearingChat,
           },
           config
         );
@@ -199,6 +212,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   };
+
   return (
     <>
       {selectedChat ? (
@@ -244,6 +258,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     fetchMessages={fetchMessages}
                   />
                 </Tooltip>
+
                 <DownloadChat />
               </>
             )}
@@ -270,10 +285,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               />
             ) : (
               <div className="messages">
-                <ScrollableChat messages={messages} />
+                <ScrollableChat
+                  messages={messages}
+                  disappearingChat={disappearingChat}
+                />
               </div>
             )}
-            <FormControl onKeyDown={submitMessage} isRequired mt={3}>
+            <FormControl
+              onKeyDown={submitMessage}
+              isRequired
+              mt={3}
+              display="flex"
+            >
               {isTyping ? (
                 <div>
                   <Lottie
@@ -293,6 +316,26 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 value={newMessage}
                 onChange={typingHandler}
               />
+              <Tooltip
+                label={
+                  !disappearingChat
+                    ? "Enable disappearing Chats"
+                    : "Enable normal Chats"
+                }
+                hasArrow
+                placement="bottom-end"
+              >
+                <IconButton
+                  display={{ base: "flex" }}
+                  onClick={() => {
+                    setDisappearingChat(!disappearingChat);
+                  }}
+                  icon={!disappearingChat ? <TimeIcon /> : <ChatIcon />}
+                />
+              </Tooltip>
+              <Tooltip label="Send Attachments">
+                <HandleAttachment user={user} />
+              </Tooltip>
             </FormControl>
           </Box>
         </>

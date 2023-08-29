@@ -5,6 +5,7 @@ import Login from "../Components/Authentication/Login";
 import SignUp from "../Components/Authentication/SignUp";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
+import AudioRecorder from "../Components/miscellaneous/AudioRecorder";
 const HomePage = () => {
   const history = useHistory();
 
@@ -46,6 +47,7 @@ const HomePage = () => {
             </TabPanel>
           </TabPanels>
         </Tabs>
+        <AudioRecorder />
       </Box>
     </Container>
   );
