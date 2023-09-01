@@ -11,6 +11,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const generateToken = require("./config/generateToken");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
+const cors = require("cors");
 const server = app.listen(
   PORT,
   console.log(`Server running on port ${PORT}`.blue.bold.underline)
@@ -43,11 +44,15 @@ app.use("/api/message", messageRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
+app.use(cors());
 
+const server2 = require("http").createServer(app);
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
 
@@ -89,7 +94,23 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });
+  // video chat
+  socket.emit("me", socket.id);
+  socket.on("disconnect", () => {
+    socket.broadcast.emit("callEnded");
+  });
+  socket.on("callUser", ({ from, userToCall, signalData, name }) => {
+    io.to(userToCall).emit("callUser", { signal: signalData, from, name });
+  });
+  socket.on("answerCall", (data) => {
+    io.to(data.to).emit("callAccepted", data.signal);
+  });
+  // video chat ends here
 });
+
+//--------------------Video Chat--------------------
+
+//-------------------------------------------
 
 // app.get("/chat", (req, res) => {
 //   res.send(chats);

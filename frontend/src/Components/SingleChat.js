@@ -25,6 +25,7 @@ import DownloadChat from "./DownloadChat";
 import { Tooltip } from "@chakra-ui/tooltip";
 import HandleAttachment from "./miscellaneous/HandleAttachment";
 
+// import { AiTwotoneVideoCamera } from "@react-icons/fa";
 // import { IconButton } from "@chakra-ui/react";
 import {
   TimeIcon,
@@ -34,8 +35,12 @@ import {
 } from "@chakra-ui/icons";
 import { ReactMediaRecorder } from "react-media-recorder";
 import AudioRecorder from "./miscellaneous/AudioRecorder";
+import { VideoCall } from "@material-ui/icons";
+import VideoChat from "./VideoChat";
+import { useHistory } from "react-router-dom";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+  const history = useHistory();
   const {
     user,
     selectedChat,
@@ -73,14 +78,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       reconnectionDelayMax: 10000,
     });
     socket.emit("setup", user);
-    console.log("connected to socket.io");
+    // console.log("connected to socket.io");
     socket.on("connect", () => {
       setSocketConnnected(true);
-      console.log("trying to connect");
+      // console.log("trying to connect");
       console.log(socket);
     });
 
-    console.log(socket);
+    // console.log(socket);
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
   });
@@ -90,10 +95,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    console.log("new useEffect", socket);
+    // console.log("new useEffect", socket);
     if (socket) {
       socket.on("message recieved", (newMessageRecieved) => {
-        console.log(newMessageRecieved);
+        // console.log(newMessageRecieved);
         // if chat is not selected or doesn't match current chat
         if (
           !selectedChatCompare ||
@@ -102,12 +107,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           if (!notification.includes(newMessageRecieved)) {
             setNotification([newMessageRecieved, ...notification]);
             setFetchAgain(!fetchAgain);
-            console.log(notification, "-------------------");
+            // console.log(notification, "-------------------");
           }
         } else {
           setMessages([...messages, newMessageRecieved]);
         }
-        console.log(messages);
+        // console.log(messages);
       });
     }
   }, []);
@@ -135,7 +140,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        console.log("socket is ", socket);
+        // console.log("socket is ", socket);
         {
           socket && socket.emit("new message", data);
         }
@@ -168,7 +173,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
       setMessages(data);
       setLoading(false);
-      console.log(messages);
+      // console.log(messages);
       {
         socket && socket.emit("join chat", selectedChat._id);
       }
@@ -239,12 +244,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <>
                 {getSender(user, selectedChat.users)[0].toUpperCase() +
                   getSender(user, selectedChat.users).slice(1)}
-                <ProfileModal user={getSenderFull(user, selectedChat.users)} />
 
+                <ProfileModal user={getSenderFull(user, selectedChat.users)} />
                 <DownloadChat />
+                <Tooltip
+                  label="Click for video calling"
+                  hasArrow
+                  placement="bottom-end"
+                >
+                  <a href="http://localhost:3000/videochat" target="_blank">
+                    <IconButton icon={<PhoneIcon />}></IconButton>
+                  </a>
+                </Tooltip>
               </>
             ) : (
               <>
+                {/* <FontAwesomeIcon icon="fa-solid fa-video" /> */}
                 {selectedChat.chatName[0].toUpperCase() +
                   selectedChat.chatName.slice(1)}
                 <Tooltip
@@ -258,8 +273,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     fetchMessages={fetchMessages}
                   />
                 </Tooltip>
-
                 <DownloadChat />
+                {/* <VideoCall /> */}
               </>
             )}
           </Text>

@@ -55,10 +55,10 @@ const ScrollableChat = ({ messages, disappearingChat }) => {
     }
   };
   const Check = (url) => {
-    console.log(url);
+    // console.log(url);
     const urlObject = new URL(url);
     const extension = urlObject.pathname.split(".").pop();
-    console.log("File extension:", extension);
+    // console.log("File extension:", extension);
     // const fileType = getFileType(extension);
 
     const imageExtensions = ["jpg", "jpeg", "png", "gif"];
@@ -154,7 +154,7 @@ const ScrollableChat = ({ messages, disappearingChat }) => {
                 }}
               >
                 {m.image && Check(m.image)}
-                {console.log(type)}
+                {/* {console.log(type)} */}
                 {m.content}
                 {m.image && type == 1 ? (
                   <Box boxSize="sm">

@@ -11,8 +11,9 @@ import { AddIcon } from "@chakra-ui/icons";
 // import Chat from "../../../backend/models/chatModel";
 import ChatLoading from "./ChatLoading";
 import { Stack } from "@chakra-ui/react";
-import { getSender } from "../config/ChatLogics";
+import { getSender, getSenderFull } from "../config/ChatLogics";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
+import ChatImage from "./ChatImage";
 const MyChats = ({ fetchAgain }) => {
   const [loggeduser, setLoggeduser] = useState();
   const {
@@ -110,21 +111,30 @@ const MyChats = ({ fetchAgain }) => {
                   py={2}
                   borderRadius="lg"
                   key={chat._id}
+                  display="flex"
                 >
-                  <Text>
-                    {!chat.isGroupChat
-                      ? getSender(loggeduser, chat.users)
-                      : chat.chatName}
-                  </Text>
-                  {chat.latestMessage && (
-                    <Text fontSize="xs">
-                      <b>{chat.latestMessage.sender.name} : </b>
-                      {chat.latestMessage.content &&
-                      chat.latestMessage.content.length > 50
-                        ? chat.latestMessage.content.substring(0, 51) + "..."
-                        : chat.latestMessage.content}
+                  <>
+                    {!chat.isGroupChat && (
+                      <ChatImage user={getSenderFull(loggeduser, chat.users)} />
+                    )}
+                  </>
+                  <Box marginLeft="5px">
+                    <Text>
+                      {!chat.isGroupChat
+                        ? getSender(loggeduser, chat.users)
+                        : chat.chatName}
                     </Text>
-                  )}
+
+                    {chat.latestMessage && (
+                      <Text fontSize="xs">
+                        <b>{chat.latestMessage.sender.name} : </b>
+                        {chat.latestMessage.content &&
+                        chat.latestMessage.content.length > 50
+                          ? chat.latestMessage.content.substring(0, 51) + "..."
+                          : chat.latestMessage.content}
+                      </Text>
+                    )}
+                  </Box>
                 </Box>
               ))}
           </Stack>

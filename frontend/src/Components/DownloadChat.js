@@ -24,7 +24,7 @@ const DownloadChat = () => {
         config
       );
       setMessages(data);
-      console.log(messages);
+      // console.log(messages);
     } catch (error) {
       toast({
         title: "Error Occured!",

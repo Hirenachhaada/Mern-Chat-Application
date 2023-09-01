@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
 .App{
     min-height: 100vh;
-    display: flex;
+    /* display: flex; */
     background-image: url("./background.png");
     background-position: center;
     background-size: cover;
-
 }
 .searchBtn:hover{
     /* background-color: #f5f5f5;
