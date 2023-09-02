@@ -19,6 +19,7 @@ import axios from "axios";
 import UserListItem from "../UserAvatar/UserListItem";
 import { Box } from "@chakra-ui/react";
 import UserBadgeItem from "../UserAvatar/UserBadgeItem";
+import { FormLabel } from "@chakra-ui/react";
 const GroupChatModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [groupChatName, setGroupChatName] = useState("");
@@ -29,6 +30,8 @@ const GroupChatModal = ({ children }) => {
 
   const toast = useToast();
   const { user, chats, setChats } = ChatState();
+
+  const [pic, setPic] = useState("");
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -89,6 +92,7 @@ const GroupChatModal = ({ children }) => {
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((u) => u._id)),
+          profilePic: pic,
         },
         config
       );
@@ -126,6 +130,55 @@ const GroupChatModal = ({ children }) => {
     );
     setSelectedUsers(filteredUsers);
   };
+
+  const postDetails = (pics) => {
+    setLoading(true);
+    console.log("in post details");
+    if (pics === undefined) {
+      toast({
+        title: "Please Select An Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    if (
+      pics.type === "image/jpeg" ||
+      pics.type === "image/png" ||
+      pics.type === "image/jpg"
+    ) {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "chat-app");
+      data.append("cloud_name", "daspplhqg");
+      fetch("https://api.cloudinary.com/v1_1/daspplhqg/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPic(data.url.toString());
+          setLoading(false);
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please Select An Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <span onClick={onOpen}>{children}</span>
@@ -158,6 +211,19 @@ const GroupChatModal = ({ children }) => {
                 mb={1}
                 onChange={(e) => {
                   handleSearch(e.target.value);
+                }}
+              />
+            </FormControl>
+            <FormControl style={{ marginBottom: "5px" }} id="pic">
+              <FormLabel>Group Profile Pic</FormLabel>
+              <Input
+                type="file"
+                accept="image/*"
+                p={1}
+                placeholder="Enter Your Name Here"
+                onChange={(ev) => {
+                  console.log("chanegd ");
+                  postDetails(ev.target.files[0]);
                 }}
               />
             </FormControl>

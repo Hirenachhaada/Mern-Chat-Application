@@ -144,19 +144,19 @@ const SideDrawer = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg={darkMode ? "#1A202C" : "white"}
+        bg={darkMode ? "#272626" : "white"}
         w="100%"
         p="5px 10px"
-        borderWidth="5px"
+        borderWidth={darkMode ? "0px" : "5px"}
       >
         <Tooltip label="Search User to Chat" hasArrow placement="bottom-end">
-          <Button bg={!darkMode ? "white" : "#1A202C"} className="searchBtn">
+          <Button bg={!darkMode ? "white" : "#272626"} className="searchBtn">
             {/* <i class="fa fa-search" aria-hidden="true"></i> */}
-            <SearchIcon color={!darkMode ? "#1A202C" : "white"} />
+            <SearchIcon color={!darkMode ? "#272626" : "white"} />
             <Text
               display={{ base: "none", md: "flex" }}
               onClick={onOpen}
-              color={!darkMode ? "#1A202C" : "white"}
+              color={!darkMode ? "#272626" : "white"}
             >
               Search User
             </Text>
@@ -165,7 +165,7 @@ const SideDrawer = () => {
         <Text
           fontSize="2xl"
           fontFamily="Work sans"
-          color={!darkMode ? "#1A202C" : "white"}
+          color={!darkMode ? "#272626" : "white"}
         >
           Talk-A-Tive
         </Text>
@@ -178,7 +178,7 @@ const SideDrawer = () => {
               }}
             >
               {!darkMode ? (
-                <MoonIcon fontSize="2xl" m={1} color="#1A202C" />
+                <MoonIcon fontSize="2xl" m={1} color="#272626" />
               ) : (
                 <SunIcon fontSize="2xl" m={1} color="white" />
               )}
@@ -187,7 +187,7 @@ const SideDrawer = () => {
               <BellIcon
                 fontSize="2xl"
                 m={1}
-                color={!darkMode ? "#1A202C" : "white"}
+                color={!darkMode ? "#272626" : "white"}
               />
             </MenuButton>
             <MenuList>

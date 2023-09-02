@@ -17,9 +17,19 @@
     justify-content: center;
 }
 .dateStamp{
-    background-color: #8c8c8c;
+    background-color: #272626;
     color: white;
     padding: 1px 2px;
     border-radius: 5px;
     font-size: 12px;
 }
+.arrowIcon{
+    font-size: 15px;
+    float: right;
+    opacity: 0;
+}
+.printingMessage:hover .arrowIcon{
+    opacity: 1;
+}
+
+

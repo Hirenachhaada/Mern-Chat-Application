@@ -15,6 +15,12 @@ const chatModel = mongoose.Schema(
         ref: "User",
       },
     ],
+    profilePic: {
+      type: String,
+      trim: true,
+      default:
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
     groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },

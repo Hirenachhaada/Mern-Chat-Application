@@ -90,6 +90,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
       isGroupChat: true,
       users: users,
       groupAdmin: req.user,
+      profilePic: req.body.profilePic,
     });
 
     const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
@@ -114,6 +115,25 @@ const rename = asyncHandler(async (req, res) => {
     .populate("users", "-password")
     .populate("groupAdmin", "-password");
 
+  if (!updateChat) {
+    return res.status(400).send("chat not found");
+  } else {
+    res.json(updateChat);
+  }
+});
+
+const updatePic = asyncHandler(async (req, res) => {
+  const { chatId, profilePic } = req.body;
+  const updateChat = await Chat.findByIdAndUpdate(
+    chatId,
+    {
+      profilePic,
+    },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+  console.log("inside backend update pic");
   if (!updateChat) {
     return res.status(400).send("chat not found");
   } else {
@@ -166,4 +186,5 @@ module.exports = {
   rename,
   addToGroup,
   removeFromGroup,
+  updatePic,
 };

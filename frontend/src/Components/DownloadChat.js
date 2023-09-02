@@ -50,17 +50,19 @@ const DownloadChat = () => {
     a.click();
   };
   return (
-    <Tooltip
-      label="Download chats as text file"
-      hasArrow
-      placement="bottom-end"
-    >
-      <IconButton
-        onClick={downloadChats}
-        display={{ base: "flex" }}
-        icon={<DownloadIcon />}
-      />
-    </Tooltip>
+    <span>
+      <Tooltip
+        label="Download chats as text file"
+        hasArrow
+        placement="bottom-end"
+      >
+        <IconButton
+          onClick={downloadChats}
+          display={{ base: "flex" }}
+          icon={<DownloadIcon />}
+        />
+      </Tooltip>
+    </span>
   );
 };
 

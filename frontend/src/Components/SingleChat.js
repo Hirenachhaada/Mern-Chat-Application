@@ -9,7 +9,7 @@ import {
   Indicator,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { ArrowBackIcon, DownloadIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, DownloadIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
@@ -27,17 +27,9 @@ import HandleAttachment from "./miscellaneous/HandleAttachment";
 
 // import { AiTwotoneVideoCamera } from "@react-icons/fa";
 // import { IconButton } from "@chakra-ui/react";
-import {
-  TimeIcon,
-  ChatIcon,
-  PhoneIcon,
-  AttachmentIcon,
-} from "@chakra-ui/icons";
-import { ReactMediaRecorder } from "react-media-recorder";
-import AudioRecorder from "./miscellaneous/AudioRecorder";
-import { VideoCall } from "@material-ui/icons";
-import VideoChat from "./VideoChat";
+import { TimeIcon, ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router-dom";
+import ScheduleMessage from "./ScheduleMessage";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const history = useHistory();
@@ -82,7 +74,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connect", () => {
       setSocketConnnected(true);
       // console.log("trying to connect");
-      console.log(socket);
+      // console.log(socket);
     });
 
     // console.log(socket);
@@ -119,8 +111,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const submitMessage = async (event) => {
     if (event.key === "Enter" && newMessage !== "") {
-      // Send Message
-      // setNewMessage("")
       {
         socket && socket.emit("stop typing", selectedChat._id);
       }
@@ -217,7 +207,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   };
-
   return (
     <>
       {selectedChat ? (
@@ -244,7 +233,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <>
                 {getSender(user, selectedChat.users)[0].toUpperCase() +
                   getSender(user, selectedChat.users).slice(1)}
-
                 <ProfileModal user={getSenderFull(user, selectedChat.users)} />
                 <DownloadChat />
                 <Tooltip
@@ -256,6 +244,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     <IconButton icon={<PhoneIcon />}></IconButton>
                   </a>
                 </Tooltip>
+                <ScheduleMessage />
               </>
             ) : (
               <>
@@ -274,6 +263,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   />
                 </Tooltip>
                 <DownloadChat />
+                <IconButton icon={<RepeatClockIcon />} />
+
                 {/* <VideoCall /> */}
               </>
             )}
@@ -283,7 +274,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             flexDir="column"
             justifyContent="flex-end"
             p={3}
-            bg={darkMode ? "gray" : "white"}
+            bg={darkMode ? "#3d3c3c" : "white"}
             w="100%"
             h="100%"
             borderRadius="lg"
@@ -303,6 +294,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <ScrollableChat
                   messages={messages}
                   disappearingChat={disappearingChat}
+                  setMessages={setMessages}
+
+                  // -------------------------------------------------------------------------------
                 />
               </div>
             )}

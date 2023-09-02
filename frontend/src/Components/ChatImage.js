@@ -4,7 +4,7 @@ import { ChatState } from "../Context/ChatProvider";
 const ChatImage = ({ user }) => {
   return (
     <>
-      {console.log(user)}
+      {/* {console.log(user)} */}
       <Image
         borderRadius="full"
         boxSize="50px"

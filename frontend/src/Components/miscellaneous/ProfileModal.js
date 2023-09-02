@@ -23,7 +23,7 @@ const ProfileModal = ({ user, children }) => {
   // const finalRef = React.useRef(null);
   const { darkMode } = ChatState();
   return (
-    <>
+    <span>
       {children ? (
         <span onClick={onOpen}>{children}</span>
       ) : (
@@ -79,7 +79,7 @@ const ProfileModal = ({ user, children }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </span>
   );
 };
 

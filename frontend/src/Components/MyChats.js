@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import { Button } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
+import { Text, Image } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 // import Chat from "../../../backend/models/chatModel";
 import ChatLoading from "./ChatLoading";
@@ -60,7 +60,7 @@ const MyChats = ({ fetchAgain }) => {
       flexDir="column"
       alignItems="center"
       p={3}
-      bg={darkMode ? "#1A202C" : "white"}
+      bg={darkMode ? "#272626" : "white"}
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
@@ -71,7 +71,7 @@ const MyChats = ({ fetchAgain }) => {
         fontSize={{ base: "28px", md: "30px" }}
         fontFamily="Work sans"
         display="flex"
-        bg={darkMode ? "#1A202C" : "white"}
+        bg={darkMode ? "#272626" : "white"}
         color={darkMode ? "white" : "black"}
         w="100%"
         justifyContent="space-between"
@@ -92,7 +92,7 @@ const MyChats = ({ fetchAgain }) => {
         display="flex"
         flexDir="column"
         p={3}
-        bg={darkMode ? "gray" : "white"}
+        bg={darkMode ? "#272626" : "white"}
         w="100%"
         h="100%"
         borderRadius="lg"
@@ -112,10 +112,18 @@ const MyChats = ({ fetchAgain }) => {
                   borderRadius="lg"
                   key={chat._id}
                   display="flex"
+                  height="70px"
                 >
                   <>
-                    {!chat.isGroupChat && (
+                    {!chat.isGroupChat ? (
                       <ChatImage user={getSenderFull(loggeduser, chat.users)} />
+                    ) : (
+                      <Image
+                        borderRadius="full"
+                        boxSize="50px"
+                        src={chat.profilePic}
+                        alt={user.name}
+                      />
                     )}
                   </>
                   <Box marginLeft="5px">

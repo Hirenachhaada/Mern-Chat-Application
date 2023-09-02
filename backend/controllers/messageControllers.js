@@ -3,7 +3,7 @@ const Message = require("../models/message"); // message model
 const Chat = require("../models/chatModel"); // chat model
 const User = require("../models/userModel"); // user model
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chatId, disappearMode, image } = req.body;
+  const { content, chatId, disappearMode, image, scheduledAt } = req.body;
   console.log(image);
   if ((!content && !image) || !chatId) {
     console.log("Invalid data passed into request");
@@ -16,6 +16,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     chat: chatId,
     disappearMode: disappearMode,
     image: image,
+    createdAt: scheduledAt,
   };
 
   try {
@@ -60,4 +61,21 @@ const sendAudioMessage = asyncHandler(async (req, res) => {
   } catch (error) {}
 });
 
-module.exports = { sendMessage, allMessages, sendAudioMessage };
+const deleteMessage = asyncHandler(async (req, res) => {
+  try {
+    const messageId = req.params.id;
+    console.log("messageId:", messageId);
+    const deletedMessage = await Message.findByIdAndRemove(messageId);
+
+    if (!deletedMessage) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    return res.status(204).send(); // Successful deletion, no content
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+module.exports = { sendMessage, allMessages, sendAudioMessage, deleteMessage };

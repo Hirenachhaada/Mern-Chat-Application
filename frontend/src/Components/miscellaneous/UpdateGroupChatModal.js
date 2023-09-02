@@ -20,7 +20,7 @@ import { Input } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect } from "react";
 import UserBadgeItem from "../UserAvatar/UserBadgeItem";
-import { FormControl } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import axios from "axios";
 import { Spinner } from "@chakra-ui/react";
 import UserListItem from "../UserAvatar/UserListItem";
@@ -34,6 +34,8 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [renameLoading, setRenameLoading] = useState(false);
+  const [newPicLoading, setNewPicLoading] = useState(false);
+  const [pic, setPic] = useState("");
   const toast = useToast();
   const handleRemove = async (user1) => {
     if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
@@ -205,6 +207,98 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
       setLoading(false);
     }
   };
+
+  const postDetails = (pics) => {
+    setLoading(true);
+    console.log("in post details");
+    if (pics === undefined) {
+      toast({
+        title: "Please Select An Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    if (
+      pics.type === "image/jpeg" ||
+      pics.type === "image/png" ||
+      pics.type === "image/jpg"
+    ) {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "chat-app");
+      data.append("cloud_name", "daspplhqg");
+      fetch("https://api.cloudinary.com/v1_1/daspplhqg/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPic(data.url.toString());
+          setLoading(false);
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please Select An Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+  };
+  const handleNewProfilePic = async () => {
+    console.log("inside new pic update");
+    console.log(pic);
+    if (!pic) return;
+    console.log("inside update pic");
+    setNewPicLoading(true);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `/api/chat/updatePic`,
+        {
+          chatId: selectedChat._id,
+          profilePic: pic,
+        },
+        config
+      );
+      setSelectedChat(data);
+      setFetchAgain(!fetchAgain);
+      setNewPicLoading(false);
+      toast({
+        title: "group profile pic updated Successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setNewPicLoading(false);
+    }
+    setPic("");
+  };
+
   return (
     <>
       <IconButton
@@ -237,6 +331,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
                 />
               ))}
             </Box>
+            <FormLabel>Group Name</FormLabel>
             <FormControl display="flex">
               <Input
                 placeholder="Chat Name"
@@ -254,7 +349,35 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
                 Update
               </Button>
             </FormControl>
+            <FormLabel>Group Profile Pic</FormLabel>
+            <FormControl
+              style={{ marginBottom: "5px" }}
+              id="pic"
+              display="flex"
+            >
+              <Input
+                type="file"
+                accept="image/*"
+                p={1}
+                placeholder="Enter Your Name Here"
+                onChange={(ev) => {
+                  console.log("chanegd ");
+                  postDetails(ev.target.files[0]);
+                }}
+                marginBottom="5px"
+              />
+              <Button
+                variant="solid"
+                colorScheme="teal"
+                ml={1}
+                isLoading={newPicLoading}
+                onClick={handleNewProfilePic}
+              >
+                Update
+              </Button>
+            </FormControl>
             <FormControl>
+              <FormLabel>Add User to Group</FormLabel>
               <Input
                 placeholder="Add User to group"
                 mb={1}
@@ -273,7 +396,6 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
               ))
             )}
           </ModalBody>
-
           <ModalFooter>
             <Button onClick={() => handleRemove(user)} colorScheme="red">
               Leave Group
