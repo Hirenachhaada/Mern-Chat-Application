@@ -325,6 +325,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 value={newMessage}
                 onChange={typingHandler}
               />
+              <button 
+              onClick={submitMessage}
+              bg="#001524"
+              fontWeight={600}
+              color="white"
+              p={2}
+              borderRadius="md"
+              >
+              Send
+              </button>
               <Tooltip
                 label={
                   !disappearingChat
