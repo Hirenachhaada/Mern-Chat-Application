@@ -116,14 +116,14 @@ const Login = () => {
       >
         LogIn
       </Button>
-      <Button
+      {/* <Button
         colorScheme="red"
         width="100%"
         onClick={getUserCredentialsHandler}
         style={{ marginTop: "15px" }}
       >
         Get Guest User Credentials
-      </Button>
+      </Button> */}
     </VStack>
   );
 };

@@ -34,7 +34,7 @@ const HomePage = () => {
         textAlign={"center"}
       >
         <Text fontSize="4xl" fontFamily="Work sans" color="black">
-          Talk-A-Tive
+          Let's Talk
         </Text>
       </Box>
       <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
@@ -52,7 +52,7 @@ const HomePage = () => {
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <AudioRecorder />
+        {/* <AudioRecorder /> */}
       </Box>
     </Container>
   );

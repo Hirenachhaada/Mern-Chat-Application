@@ -167,7 +167,7 @@ const SideDrawer = () => {
           fontFamily="Work sans"
           color={!darkMode ? "#272626" : "white"}
         >
-          Talk-A-Tive
+          Let's Talk
         </Text>
         <div>
           <Menu>
