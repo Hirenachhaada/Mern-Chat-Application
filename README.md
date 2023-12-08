@@ -45,5 +45,5 @@ The following features are present in this chat application:
 ## Contribution Guideline
 - Any contributions you make for this project are greatly appreciated.
 - The open source community such an amazing place to learn, inspire, and create.
-- Check out our [contribution guidelines](/CONTRIBUTING.md) for more information.
+- Check out our [contribution guidelines](CONTRIBUTING.md) for more information.
 ```.
