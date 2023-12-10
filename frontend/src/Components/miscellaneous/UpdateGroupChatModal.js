@@ -373,7 +373,9 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
           <ModalCloseButton />
           <ModalBody>
             <Box w="100%" display="flex" flexWrap="wrap" pb={3}>
-              {selectedChat.users.map((u) => (
+              {selectedChat.users
+              .filter((users) => users._id !== user._id) // Exclude the current user
+              .map((u) => (
                 <UserBadgeItem
                   key={u._id}
                   user={u}
