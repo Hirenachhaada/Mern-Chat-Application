@@ -15,6 +15,7 @@ import { Button } from "@chakra-ui/react";
 import { ViewIcon } from "@chakra-ui/icons";
 import { Image, Text } from "@chakra-ui/react";
 import { ChatState } from "../../Context/ChatProvider";
+import UpdatePassword from "../Authentication/UpdatePassword";
 
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,6 +74,10 @@ const ProfileModal = ({ user, children }) => {
           </ModalBody>
 
           <ModalFooter>
+            <Button colorScheme="blue" mr={3}>
+              <UpdatePassword user={user}>Update Password</UpdatePassword>
+            </Button>
+
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>

@@ -6,10 +6,11 @@ import SignUp from "../Components/Authentication/SignUp";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import AudioRecorder from "../Components/miscellaneous/AudioRecorder";
-import { makeStyles } from "@material-ui/core/styles";
+import { styled } from "@mui/system";
+// import { makeStyles } from "@mui/styles";
 import VideoChat from "../Components/VideoChat";
 
-const useStyles = makeStyles((theme) => ({}));
+// const useStyles = makeStyles((theme) => ({}));
 
 const HomePage = () => {
   const history = useHistory();
