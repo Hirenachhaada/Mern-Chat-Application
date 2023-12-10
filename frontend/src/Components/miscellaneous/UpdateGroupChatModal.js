@@ -451,7 +451,9 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
             ) : (
               <>
                 <FormLabel>Select next admin for the group</FormLabel>
-                {selectedChat.users?.map((user) => (
+                {selectedChat.users
+                .filter((users) => users._id !== user._id) // Exclude the current user
+                .map((user) => (
                   <UserListItem
                     key={user._id}
                     user={user}
