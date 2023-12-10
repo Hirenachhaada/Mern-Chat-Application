@@ -74,10 +74,6 @@ const ProfileModal = ({ user, children }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              <UpdatePassword user={user}>Update Password</UpdatePassword>
-            </Button>
-
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
