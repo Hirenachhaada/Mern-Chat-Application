@@ -36,7 +36,58 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const [renameLoading, setRenameLoading] = useState(false);
   const [newPicLoading, setNewPicLoading] = useState(false);
   const [pic, setPic] = useState("");
+  const [adminSelectionOpen, setAdminSelectionOpen] = useState(false);
   const toast = useToast();
+
+  const handleLeaveGroup = () => {
+    console.log(selectedChat)
+      if (selectedChat.groupAdmin._id === user._id) {
+          console.log('admin leave group');
+          console.log(user)
+          setAdminSelectionOpen(true);
+      } else {
+          // Code for non-admin leaving the group
+          handleRemove(user);
+      }
+  };
+
+  const handleAdminSelection = async (selectedUser) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const response = await axios.put(
+        'http://localhost:5000/api/chat/updateGroupAdmin',
+        {
+          chatId: selectedChat._id,
+          newAdminId: selectedUser._id,
+        },
+        config
+      );
+
+      const updatedChat = response.data;
+
+      console.log('Group admin updated:', updatedChat);
+
+      // Close the admin selection modal
+      setAdminSelectionOpen(false);
+      // remove user from group
+      handleRemove(user);
+    } catch (error) {
+      toast({
+        title: 'Error Occurred!',
+        description: error.response?.data?.message || 'Failed to update group admin',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom',
+      });
+    }
+  };
+
   const handleRemove = async (user1) => {
     if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
       toast({
@@ -395,9 +446,23 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
                 />
               ))
             )}
+            {!adminSelectionOpen ? (
+              ""
+            ) : (
+              <>
+                <FormLabel>Select next admin for the group</FormLabel>
+                {selectedChat.users?.map((user) => (
+                  <UserListItem
+                    key={user._id}
+                    user={user}
+                    handleFunction={() => handleAdminSelection(user)}
+                  />
+                ))}
+              </>
+            )}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={() => handleRemove(user)} colorScheme="red">
+            <Button onClick={() => handleLeaveGroup(user)} colorScheme="red">
               Leave Group
             </Button>
           </ModalFooter>
