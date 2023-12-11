@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
+dotenv.config();
 const chats = require("./data");
 const connectDB = require("./config/db");
 const color = require("colors");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -16,7 +17,6 @@ const server = app.listen(
   PORT,
   console.log(`Server running on port ${PORT}`.blue.bold.underline)
 );
-dotenv.config();
 connectDB();
 
 // -------------------------Deployment-------------------------
@@ -32,7 +32,12 @@ connectDB();
 //   });
 // }
 // -------------------------Deployment-------------------------
-
+const corsOptions = {
+    origin: "*",
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Api is listening");
@@ -44,7 +49,6 @@ app.use("/api/message", messageRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-app.use(cors());
 
 const server2 = require("http").createServer(app);
 const io = require("socket.io")(server, {

@@ -160,6 +160,30 @@ const addToGroup = asyncHandler(async (req, res) => {
   }
 });
 
+const updateGroupAdmin = asyncHandler(async (req, res) => {
+  const { chatId, newAdminId } = req.body;
+
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        groupAdmin: newAdminId,
+      },
+      { new: true }
+    )
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
+
+    if (!updatedChat) {
+      return res.status(400).send("Chat not found");
+    }
+
+    res.json(updatedChat);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 const removeFromGroup = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
   const removed = await Chat.findByIdAndUpdate(
@@ -187,4 +211,5 @@ module.exports = {
   addToGroup,
   removeFromGroup,
   updatePic,
+  updateGroupAdmin,
 };
