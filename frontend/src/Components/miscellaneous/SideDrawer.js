@@ -45,6 +45,7 @@ import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
 import { set } from "mongoose";
 import UpdateProfile from "../Authentication/UpdateProfile";
+import UpdatePassword from "../Authentication/UpdatePassword";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -225,6 +226,9 @@ const SideDrawer = () => {
               <UpdateProfile user={user}>
                 <MenuItem>Update Profile</MenuItem>
               </UpdateProfile>
+              <UpdatePassword user={user}>
+                <MenuItem>Update Password</MenuItem>
+              </UpdatePassword>
               <MenuDivider />
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>
             </MenuList>

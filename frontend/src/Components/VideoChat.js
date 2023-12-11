@@ -1,9 +1,9 @@
 import React from "react";
-import { Typography, AppBar } from "@material-ui/core";
+import { Typography, AppBar } from "@mui/material";
 import VideoPlayer from "../Components/videoChat/VideoPlayer";
 import Options from "../Components/videoChat/Options";
 import Notifications from "../Components/videoChat/Notifications";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/material/styles";
 import { ContextProvider } from "./SocketContext";
 import {
   Modal,

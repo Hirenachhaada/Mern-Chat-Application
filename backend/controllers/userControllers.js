@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const bcrypt = require('bcryptjs')
 const generateToken = require("../config/generateToken");
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -99,11 +100,35 @@ catch(err){
   //   user.pic = req.body.pic || user.pic;
     
   // }
-  // else{
+  // else{y
   //   res.status(404);
   //   throw new Error("User not found");
   // }
 })
 
 
-module.exports = { registerUser, authUser , allUsers, updateUser};
+const updatePassword = asyncHandler(async(req,res)=>{
+  try{
+    const user_id = req.params.userId;
+  const user = await User.findOne({_id:user_id});
+
+    if(user){
+    const isMatch = await user.matchPassword(req.body.oldPassword);
+    
+    if (isMatch) {
+      if(req.body.newPassword==req.body.confirmPassword){
+          const hashedNewPassword = await bcrypt.hash(req.body.newPassword, 10);
+          const userData=await User.findByIdAndUpdate({_id:user_id},{$set:{
+          password:hashedNewPassword
+          }}, { new: true })
+          console.log("password updated")
+          res.json(userData);
+      } 
+    }
+  }
+  }catch(err){
+  console.log(err);
+}
+})
+
+module.exports = { registerUser, authUser , allUsers, updateUser,updatePassword};
