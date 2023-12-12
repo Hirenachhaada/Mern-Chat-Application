@@ -9,6 +9,7 @@ import {
   Indicator,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
+import { Textarea } from "@chakra-ui/react";
 import { ArrowBackIcon, DownloadIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./miscellaneous/ProfileModal";
@@ -110,41 +111,49 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, []);
 
   const submitMessage = async (event) => {
-    if (event.key === "Enter" && newMessage !== "") {
-      {
+    if (event.key === "Enter") 
+    {
+      // Prevent the default behavior of the Enter key (e.g., submitting a form)
+      event.preventDefault();
+  
+      // If Shift key is pressed along with Enter, add a newline character
+      if (event.shiftKey) {
+        setNewMessage((prevMessage) => prevMessage + "\n");
+      } else if (newMessage.trim() !== "") {
+        // If only Enter is pressed and the message is not empty, send the message
         socket && socket.emit("stop typing", selectedChat._id);
-      }
-      try {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        const { data } = await axios.post(
-          "/api/message",
-          {
-            content: newMessage,
-            chatId: selectedChat._id,
-            disappearMode: disappearingChat,
-          },
-          config
-        );
-        // console.log("socket is ", socket);
-        {
+  
+        try {
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          };
+  
+          const { data } = await axios.post(
+            "/api/message",
+            {
+              content: newMessage,
+              chatId: selectedChat._id,
+              disappearMode: disappearingChat,
+            },
+            config
+          );
+  
           socket && socket.emit("new message", data);
+          setNewMessage("");
+          setMessages([...messages, data]);
+        } catch (error) {
+          toast({
+            title: "Error Occurred!",
+            description: "Failed to send the Message",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom",
+          });
         }
-        setNewMessage("");
-        setMessages([...messages, data]);
-      } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the Message",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
-        });
       }
     }
   };
@@ -180,11 +189,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnnected) return;
@@ -207,6 +218,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   };
+
+  
   return (
     <>
       {selectedChat ? (
@@ -318,7 +331,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <div></div>
               )}
-              <Input
+              <Textarea
                 variant="filled"
                 bg="#E0E0E0"
                 placeholder="Enter a message.."
@@ -371,3 +384,4 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 };
 
 export default SingleChat;
+
