@@ -18,7 +18,7 @@ import { CalendarIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import chatBG from "../animation/chatBG.webp";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import axios from "axios";
-import { useRef, useLayoutEffect} from 'react';
+import { useRef, useLayoutEffect } from "react";
 
 const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
   const { user, darkMode } = ChatState();
@@ -41,8 +41,6 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
     };
   }, [openMessageId]);
 
-
-
   const containerRefs = useRef([]);
 
   const [messageWidths, setMessageWidths] = useState([]);
@@ -53,7 +51,7 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
         const messageElement = ref;
         return messageElement.getBoundingClientRect().width;
       }
-      return 0; 
+      return 0;
     });
     setMessageWidths(widths);
   }, [messages]);
@@ -203,202 +201,203 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
       <div>
         {messages &&
           messages.map((m, i) => (
-          <div style={{ display:"flex",flexDirection: "column"}}>
-            <div>
-              {CheckDateDiff(m)}
-              {timeDifference >= 0 &&
-              (!m.disappearMode ||
-                (m.disappearMode && !isDifferenceGreaterThan24Hours)) ? (
-                <>
-                  <p  className="printDate">{printDate(messages, m, i)}</p>
-                  <div
-                    style={{ display: "flex" }}
-                    key={m._id}
-                    className="messageContainer"
-                  >
-                    {(isSameSender(messages, m, i, user._id) ||
-                      isLastMessage(messages, i, user._id)) && (
-                      <Tooltip
-                        label={m.sender.name}
-                        placement="bottom-start"
-                        hasArrow
-                      >
-                        <ProfileModal user={m.sender}>
-                          <Avatar
-                            mt="7px"
-                            mr={1}
-                            size="sm"
-                            cursor="pointer"
-                            name={m.sender.name}
-                            src={m.sender.pic}
-                          />
-                        </ProfileModal>
-                      </Tooltip>
-                    )}
-                 
-                    <p
-                                ref={el => (containerRefs.current[i] = el)}
-                      className="printingMessage"
-                      style={{
-                        backgroundColor: `${
-                          m.sender._id === user._id
-                            ? !darkMode
-                              ? "#BEE3F8"
-                              : "#035c4c"
-                            : darkMode
-                            ? "#272626"
-                            : "#B9F5D0"
-                        }`,
-                        color: `${darkMode ? "white" : "black"}`,
-
-                        marginLeft: isSameSenderMargin(
-                          messages,
-                          m,
-                          i,
-                          user._id
-                        ),
-                        marginTop: isSameUser(messages, m, i, user._id)
-                          ? 3
-                          : 10,
-                        borderRadius: "20px",
-                        padding: "5px 15px",
-                        maxWidth: "75%",
-                        
-                      }
-                      
-                    
-                    }
-
-
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div>
+                {CheckDateDiff(m)}
+                {timeDifference >= 0 &&
+                (!m.disappearMode ||
+                  (m.disappearMode && !isDifferenceGreaterThan24Hours)) ? (
+                  <>
+                    <p className="printDate">{printDate(messages, m, i)}</p>
+                    <div
+                      style={{ display: "flex" }}
+                      key={m._id}
+                      className="messageContainer"
                     >
-                      {m.image && Check(m.image)}
-                      {m.content}
-                      {m.image && type == 1 ? (
-                        <Box boxSize="sm">
-                          <Image src={m.image} alt="Some image" />
-                        </Box>
-                      ) : (
-                        <> </>
+                      {(isSameSender(messages, m, i, user._id) ||
+                        isLastMessage(messages, i, user._id)) && (
+                        <Tooltip
+                          label={m.sender.name}
+                          placement="bottom-start"
+                          hasArrow
+                        >
+                          <ProfileModal user={m.sender}>
+                            <Avatar
+                              mt="7px"
+                              mr={1}
+                              size="sm"
+                              cursor="pointer"
+                              name={m.sender.name}
+                              src={m.sender.pic}
+                            />
+                          </ProfileModal>
+                        </Tooltip>
                       )}
-                      {m.image && type == 2 ? (
-                        <Box boxSize="sm">
-                          <video controls>
-                            <source src={m.image} type="video/mp4" />
-                            Your browser does not support the video element.
-                          </video>
-                        </Box>
-                      ) : (
-                        <> </>
-                      )}
-                      {m.image && type == 3 ? (
-                        <Box width="100px">
-                          <audio controls>
-                            <source src={m.image} type="audio/mpeg" />
-                            Your browser does not support the audio element.
-                          </audio>
-                        </Box>
-                      ) : (
-                        <> </>
-                      )}
-                      {m.image && type == 4 ? (
-                        <Box Boxsize="sm">
-                          <CalendarIcon fontSize={"22px"} />
-                          <a
-                            href={m.image}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Download Document
-                          </a>
-                        </Box>
-                      ) : (
-                        <> </>
-                      )}
-                      {m.image && type == 5 ? (
-                        <Box width="100px">Not supportable File</Box>
-                      ) : (
-                        <> </>
-                      )}
-                      <span
-                        className="arrowIcon"
-                        onClick={() => {
-                          toggleDropdown(m._id);
+
+                      <p
+                        ref={(el) => (containerRefs.current[i] = el)}
+                        className="printingMessage"
+                        style={{
+                          backgroundColor: `${
+                            m.sender._id === user._id
+                              ? !darkMode
+                                ? "#BEE3F8"
+                                : "#035c4c"
+                              : darkMode
+                              ? "#272626"
+                              : "#B9F5D0"
+                          }`,
+                          color: `${darkMode ? "white" : "black"}`,
+
+                          marginLeft: isSameSenderMargin(
+                            messages,
+                            m,
+                            i,
+                            user._id
+                          ),
+                          marginTop: isSameUser(messages, m, i, user._id)
+                            ? 3
+                            : 10,
+                          borderRadius: "20px",
+                          padding: "5px 15px",
+                          maxWidth: "75%",
                         }}
                       >
-                        <ArrowDownIcon />
-                      </span>
+                        {m.image && Check(m.image)}
+                        {m.content}
+                        {m.image && type == 1 ? (
+                          <Box
+                            boxSize="sm"
+                            style={{
+                              border: "5px solid black",
+                              height: "fit-content",
+                            }}
+                          >
+                            <Image src={m.image} alt="Some image" />
+                          </Box>
+                        ) : (
+                          <> </>
+                        )}
+                        {m.image && type == 2 ? (
+                          <Box boxSize="sm">
+                            <video controls>
+                              <source src={m.image} type="video/mp4" />
+                              Your browser does not support the video element.
+                            </video>
+                          </Box>
+                        ) : (
+                          <> </>
+                        )}
+                        {m.image && type == 3 ? (
+                          <Box width="100px">
+                            <audio controls>
+                              <source src={m.image} type="audio/mpeg" />
+                              Your browser does not support the audio element.
+                            </audio>
+                          </Box>
+                        ) : (
+                          <> </>
+                        )}
+                        {m.image && type == 4 ? (
+                          <Box Boxsize="sm">
+                            <CalendarIcon fontSize={"22px"} />
+                            <a
+                              href={m.image}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Download Document
+                            </a>
+                          </Box>
+                        ) : (
+                          <> </>
+                        )}
+                        {m.image && type == 5 ? (
+                          <Box width="100px">Not supportable File</Box>
+                        ) : (
+                          <> </>
+                        )}
+                        <span
+                          className="arrowIcon"
+                          onClick={() => {
+                            toggleDropdown(m._id);
+                          }}
+                        >
+                          <ArrowDownIcon />
+                        </span>
 
-                      <span className="timeStamp">
-                        {getHours(m.createdAt) + getMins(m.createdAt)}
-                      </span>
-                    </p>
-                  </div>
-                
-                </>
-              ) : (
-                <></>
-              )}
+                        <span className="timeStamp">
+                          {getHours(m.createdAt) + getMins(m.createdAt)}
+                        </span>
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
               {openMessageId === m._id && (
-                    
-                    <div 
-                    
+                <div
+                  className="dropdown-content"
+                  style={{
+                    alignSelf:
+                      m.sender._id === user._id ? "flex-end" : "flex-start",
+                    marginLeft:
+                      m.sender._id === user._id
+                        ? "0px"
+                        : `${messageWidths[i] - 50}px`,
+                    borderRadius: "20px",
+                    padding: "5px 15px",
+                  }}
+                >
+                  <div style={{ display: "inline-block" }}>
+                    <Box
+                      alignItems="center"
+                      bg={darkMode ? "#272626" : "white"}
+                      borderRadius="1g"
                       className="dropdown-content"
-                      style={{
-                        alignSelf: m.sender._id === user._id ? "flex-end" : "flex-start",
-                     marginLeft: m.sender._id === user._id?"0px":`${messageWidths[i]-50 }px`,
-                        borderRadius: "20px",
-                        padding: "5px 15px",                        
-                      }}
                     >
-                      <div style={{ display: "inline-block" }}>
-                      <Box
-                        alignItems="center"
-                        bg={darkMode ? "#272626" : "white"}
-                        borderRadius="1g"
-                       className="dropdown-content"
-                      
-                      >
-                        <CopyToClipboard
-                          text={m.content}
-                          style={{ padding: "5px",backgroundColor: darkMode ? "#272626" : "gray", 
-                                                       color: "white" ,
-                                                       borderRadius: "5px",
-                                                       border:darkMode ?   "solid white":"solid black" ,
+                      <CopyToClipboard
+                        text={m.content}
+                        style={{
+                          padding: "5px",
+                          backgroundColor: darkMode ? "#272626" : "gray",
+                          color: "white",
+                          borderRadius: "5px",
+                          border: darkMode ? "solid white" : "solid black",
                         }}
-                        >
-                          <option
-                            value="option1"
-                            style={{
-                              padding: "5px",
-                              
-                            }}
-                          >Copy
-                          </option>
-                      </CopyToClipboard>
-                      <div style={{  height: '5px' }}></div>
-
+                      >
                         <option
-                          value="option2"
+                          value="option1"
                           style={{
-                            backgroundColor:darkMode ? "#272626" : "gray",
-                            color:  "white",
-                            border:darkMode ?   "solid white":"solid black" , 
                             padding: "5px",
-                            borderRadius: "5px",
-                          }}
-                          onClick={() => {
-                            deleteMessage(m._id);
                           }}
                         >
-                          Delete
+                          Copy
                         </option>
-                      </Box>
-                      </div>
-                    </div>
-                  )}
+                      </CopyToClipboard>
+                      <div style={{ height: "5px" }}></div>
+
+                      <option
+                        value="option2"
+                        style={{
+                          backgroundColor: darkMode ? "#272626" : "gray",
+                          color: "white",
+                          border: darkMode ? "solid white" : "solid black",
+                          padding: "5px",
+                          borderRadius: "5px",
+                        }}
+                        onClick={() => {
+                          deleteMessage(m._id);
+                        }}
+                      >
+                        Delete
+                      </option>
+                    </Box>
+                  </div>
+                </div>
+              )}
             </div>
-            
           ))}
       </div>
     </ScrollableFeed>
