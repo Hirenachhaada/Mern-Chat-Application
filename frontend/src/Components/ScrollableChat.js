@@ -10,7 +10,7 @@ import {
 import { format } from "date-fns";
 import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from "./miscellaneous/ProfileModal";
-import { DarkMode, Image } from "@chakra-ui/react";
+import { Image } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { set } from "mongoose";
@@ -18,7 +18,6 @@ import { CalendarIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import chatBG from "../animation/chatBG.webp";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import axios from "axios";
-import { useRef, useLayoutEffect} from 'react';
 
 const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
   const { user, darkMode } = ChatState();
@@ -40,23 +39,6 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [openMessageId]);
-
-
-
-  const containerRefs = useRef([]);
-
-  const [messageWidths, setMessageWidths] = useState([]);
-
-  useLayoutEffect(() => {
-    const widths = containerRefs.current.map((ref, index) => {
-      if (ref) {
-        const messageElement = ref;
-        return messageElement.getBoundingClientRect().width;
-      }
-      return 0; 
-    });
-    setMessageWidths(widths);
-  }, [messages]);
 
   var type = 0;
   const getHours = (dateObj) => {
@@ -198,19 +180,25 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
     }
   };
 
+  function NewlineText(props) {
+    const text = props.text;
+    const newText = text.split('\n').map(str => <p>{str}</p>);
+    
+    return newText;
+  }
+
   return (
     <ScrollableFeed>
       <div>
         {messages &&
           messages.map((m, i) => (
-          <div style={{ display:"flex",flexDirection: "column"}}>
             <div>
               {CheckDateDiff(m)}
               {timeDifference >= 0 &&
               (!m.disappearMode ||
                 (m.disappearMode && !isDifferenceGreaterThan24Hours)) ? (
                 <>
-                  <p  className="printDate">{printDate(messages, m, i)}</p>
+                  <p className="printDate">{printDate(messages, m, i)}</p>
                   <div
                     style={{ display: "flex" }}
                     key={m._id}
@@ -235,9 +223,7 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                         </ProfileModal>
                       </Tooltip>
                     )}
-                 
                     <p
-                                ref={el => (containerRefs.current[i] = el)}
                       className="printingMessage"
                       style={{
                         backgroundColor: `${
@@ -263,16 +249,10 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                         borderRadius: "20px",
                         padding: "5px 15px",
                         maxWidth: "75%",
-                        
-                      }
-                      
-                    
-                    }
-
-
+                      }}
                     >
                       {m.image && Check(m.image)}
-                      {m.content}
+                      <NewlineText text={m.content}/>
                       {m.image && type == 1 ? (
                         <Box boxSize="sm">
                           <Image src={m.image} alt="Some image" />
@@ -333,57 +313,44 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                       </span>
                     </p>
                   </div>
-                
-                </>
-              ) : (
-                <></>
-              )}
-              </div>
-              {openMessageId === m._id && (
-                    
-                    <div 
-                    
+                  {openMessageId === m._id && (
+                    <div
                       className="dropdown-content"
                       style={{
-                        alignSelf: m.sender._id === user._id ? "flex-end" : "flex-start",
-                     marginLeft: m.sender._id === user._id?"0px":`${messageWidths[i]-50 }px`,
+                        float: isSameUser(messages, m, i, user._id)
+                          ? "right"
+                          : "left",
                         borderRadius: "20px",
-                        padding: "5px 15px",                        
+                        padding: "5px 15px",
+                        maxWidth: "75%",
                       }}
                     >
-                      <div style={{ display: "inline-block" }}>
                       <Box
                         alignItems="center"
                         bg={darkMode ? "#272626" : "white"}
-                        borderRadius="1g"
-                       className="dropdown-content"
-                      
+                        borderRadius="lg"
+                        backgroundColor={darkMode ? "#272626" : "gray"}
+                        className="dropdown-content"
                       >
                         <CopyToClipboard
                           text={m.content}
-                          style={{ padding: "5px",backgroundColor: darkMode ? "#272626" : "gray", 
-                                                       color: "white" ,
-                                                       borderRadius: "5px",
-                                                       border:darkMode ?   "solid white":"solid black" ,
-                        }}
+                          style={{ padding: "5px" }}
                         >
                           <option
                             value="option1"
                             style={{
+                              border: "solid white",
                               padding: "5px",
-                              
+                              borderRadius: "5px",
                             }}
-                          >Copy
+                          >
+                            Copy
                           </option>
-                      </CopyToClipboard>
-                      <div style={{  height: '5px' }}></div>
-
+                        </CopyToClipboard>
                         <option
                           value="option2"
                           style={{
-                            backgroundColor:darkMode ? "#272626" : "gray",
-                            color:  "white",
-                            border:darkMode ?   "solid white":"solid black" , 
+                            border: "solid white",
                             padding: "5px",
                             borderRadius: "5px",
                           }}
@@ -394,11 +361,13 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                           Delete
                         </option>
                       </Box>
-                      </div>
                     </div>
                   )}
+                </>
+              ) : (
+                <></>
+              )}
             </div>
-            
           ))}
       </div>
     </ScrollableFeed>
