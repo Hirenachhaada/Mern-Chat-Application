@@ -10,7 +10,7 @@ import {
 import { format } from "date-fns";
 import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from "./miscellaneous/ProfileModal";
-import { DarkMode, Image } from "@chakra-ui/react";
+import { Image } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { set } from "mongoose";
@@ -55,7 +55,6 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
     });
     setMessageWidths(widths);
   }, [messages]);
-
   var type = 0;
   const getHours = (dateObj) => {
     const date = new Date(dateObj);
@@ -196,6 +195,13 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
     }
   };
 
+  function NewlineText(props) {
+    const text = props.text;
+    const newText = text.split('\n').map(str => <p>{str}</p>);
+    
+    return newText;
+  }
+
   return (
     <ScrollableFeed>
       <div>
@@ -232,6 +238,113 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                             />
                           </ProfileModal>
                         </Tooltip>
+            <div>
+              {CheckDateDiff(m)}
+              {timeDifference >= 0 &&
+              (!m.disappearMode ||
+                (m.disappearMode && !isDifferenceGreaterThan24Hours)) ? (
+                <>
+                  <p className="printDate">{printDate(messages, m, i)}</p>
+                  <div
+                    style={{ display: "flex" }}
+                    key={m._id}
+                    className="messageContainer"
+                  >
+                    {(isSameSender(messages, m, i, user._id) ||
+                      isLastMessage(messages, i, user._id)) && (
+                      <Tooltip
+                        label={m.sender.name}
+                        placement="bottom-start"
+                        hasArrow
+                      >
+                        <ProfileModal user={m.sender}>
+                          <Avatar
+                            mt="7px"
+                            mr={1}
+                            size="sm"
+                            cursor="pointer"
+                            name={m.sender.name}
+                            src={m.sender.pic}
+                          />
+                        </ProfileModal>
+                      </Tooltip>
+                    )}
+                    <p
+                      className="printingMessage"
+                      style={{
+                        backgroundColor: `${
+                          m.sender._id === user._id
+                            ? !darkMode
+                              ? "#BEE3F8"
+                              : "#035c4c"
+                            : darkMode
+                            ? "#272626"
+                            : "#B9F5D0"
+                        }`,
+                        color: `${darkMode ? "white" : "black"}`,
+
+                        marginLeft: isSameSenderMargin(
+                          messages,
+                          m,
+                          i,
+                          user._id
+                        ),
+                        marginTop: isSameUser(messages, m, i, user._id)
+                          ? 3
+                          : 10,
+                        borderRadius: "20px",
+                        padding: "5px 15px",
+                        maxWidth: "75%",
+                      }}
+                    >
+                      {m.image && Check(m.image)}
+                      <NewlineText text={m.content}/>
+                      {m.image && type == 1 ? (
+                        <Box boxSize="sm">
+                          <Image src={m.image} alt="Some image" />
+                        </Box>
+                      ) : (
+                        <> </>
+                      )}
+                      {m.image && type == 2 ? (
+                        <Box boxSize="sm">
+                          <video controls>
+                            <source src={m.image} type="video/mp4" />
+                            Your browser does not support the video element.
+                          </video>
+                        </Box>
+                      ) : (
+                        <> </>
+                      )}
+                      {m.image && type == 3 ? (
+                        <Box width="100px">
+                          <audio controls>
+                            <source src={m.image} type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                          </audio>
+                        </Box>
+                      ) : (
+                        <> </>
+                      )}
+                      {m.image && type == 4 ? (
+                        <Box Boxsize="sm">
+                          <CalendarIcon fontSize={"22px"} />
+                          <a
+                            href={m.image}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Download Document
+                          </a>
+                        </Box>
+                      ) : (
+                        <> </>
+                      )}
+                      {m.image && type == 5 ? (
+                        <Box width="100px">Not supportable File</Box>
+                      ) : (
+                        <> </>
+
                       )}
 
                       <p
@@ -373,9 +486,51 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                           border: darkMode ? "solid white" : "solid black",
                         }}
                       >
+                      <span className="timeStamp">
+                        {getHours(m.createdAt) + getMins(m.createdAt)}
+                      </span>
+                    </p>
+                  </div>
+                  {openMessageId === m._id && (
+                    <div
+                      className="dropdown-content"
+                      style={{
+                        float: isSameUser(messages, m, i, user._id)
+                          ? "right"
+                          : "left",
+                        borderRadius: "20px",
+                        padding: "5px 15px",
+                        maxWidth: "75%",
+                      }}
+                    >
+                      <Box
+                        alignItems="center"
+                        bg={darkMode ? "#272626" : "white"}
+                        borderRadius="lg"
+                        backgroundColor={darkMode ? "#272626" : "gray"}
+                        className="dropdown-content"
+                      >
+                        <CopyToClipboard
+                          text={m.content}
+                          style={{ padding: "5px" }}
+                        >
+                          <option
+                            value="option1"
+                            style={{
+                              border: "solid white",
+                              padding: "5px",
+                              borderRadius: "5px",
+                            }}
+                          >
+                            Copy
+                          </option>
+                        </CopyToClipboard>
                         <option
                           value="option1"
                           style={{
+
+                            border: "solid white",
+
                             padding: "5px",
                           }}
                         >
@@ -402,6 +557,13 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                     </Box>
                   </div>
                 </div>
+
+                      </Box>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <></>
               )}
             </div>
           ))}
