@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 dotenv.config();
 const connectDB = async () => {
-  const conString = process.env.MONGO_URI;
+  const conString = "mongodb://localhost:27017/";
   console.log(conString);
   try {
     const conn = await mongoose.connect(conString, {

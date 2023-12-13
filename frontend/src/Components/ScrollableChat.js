@@ -279,7 +279,12 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                           <> </>
                         )}
                         {m.image && type == 2 ? (
-                          <Box boxSize="sm">
+                          <Box
+                            boxSize="sm"
+                            style={{
+                              height: "fit-content",
+                            }}
+                          >
                             <video controls>
                               <source src={m.image} type="video/mp4" />
                               Your browser does not support the video element.
@@ -289,7 +294,9 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                           <> </>
                         )}
                         {m.image && type == 3 ? (
-                          <Box width="100px">
+                          <Box  style={{
+                              width: "fit-content",
+                            }}>
                             <audio controls>
                               <source src={m.image} type="audio/mpeg" />
                               Your browser does not support the audio element.
