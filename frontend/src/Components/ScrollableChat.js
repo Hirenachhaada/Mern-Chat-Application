@@ -269,7 +269,6 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                           <Box
                             boxSize="sm"
                             style={{
-                              border: "5px solid black",
                               height: "fit-content",
                             }}
                           >
