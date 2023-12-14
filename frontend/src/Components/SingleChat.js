@@ -111,18 +111,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, []);
 
   const submitMessage = async (event) => {
-    if (event.key === "Enter") 
-    {
+    if (event.key === "Enter") {
       // Prevent the default behavior of the Enter key (e.g., submitting a form)
       event.preventDefault();
-  
+
       // If Shift key is pressed along with Enter, add a newline character
       if (event.shiftKey) {
         setNewMessage((prevMessage) => prevMessage + "\n");
       } else if (newMessage.trim() !== "") {
         // If only Enter is pressed and the message is not empty, send the message
         socket && socket.emit("stop typing", selectedChat._id);
-  
+
         try {
           const config = {
             headers: {
@@ -130,7 +129,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               Authorization: `Bearer ${user.token}`,
             },
           };
-  
+
           const { data } = await axios.post(
             "/api/message",
             {
@@ -140,7 +139,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             },
             config
           );
-  
+
           socket && socket.emit("new message", data);
           setNewMessage("");
           setMessages([...messages, data]);
@@ -189,14 +188,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  
+  const autoResize=()=> {
+    const textarea = document.getElementById('messageTextarea');
+    textarea.style.height = 'auto'; // Reset the height to auto to calculate the scroll height
+    textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to the scroll height
+  }
   const typingHandler = (e) => {
+    autoResize();
     setNewMessage(e.target.value);
     if (!socketConnnected) return;
     if (!typing) {
@@ -219,7 +223,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   };
 
-  
+
   return (
     <>
       {selectedChat ? (
@@ -309,7 +313,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   disappearingChat={disappearingChat}
                   setMessages={setMessages}
 
-                  // -------------------------------------------------------------------------------
+                // -------------------------------------------------------------------------------
                 />
               </div>
             )}
@@ -332,6 +336,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <div></div>
               )}
               <Textarea
+                id="messageTextarea"
                 variant="filled"
                 bg="#E0E0E0"
                 placeholder="Enter a message.."
