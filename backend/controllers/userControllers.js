@@ -2,6 +2,9 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require('bcryptjs')
 const generateToken = require("../config/generateToken");
+const jwt = require('jsonwebtoken');
+const passwordMailer = require('../mailers/password_mailers');
+
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
   if (!name || !email || !password) {
@@ -131,4 +134,68 @@ const updatePassword = asyncHandler(async(req,res)=>{
 }
 })
 
-module.exports = { registerUser, authUser , allUsers, updateUser,updatePassword};
+const forgotPassoword = asyncHandler(async(req,res)=>{
+  try{
+    const {email}=req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log("user not found");
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    const secret = process.env.JWT_SECRET + user.password;
+    const payload = {
+      email: user.email,
+      id: user._id
+    }
+    const token = jwt.sign(payload, secret, {
+      expiresIn: '15m'
+    });
+    const link = `${process.env.LOCALHOST}/resetForgotPassword/${user._id}/${token}`;
+
+    passwordMailer.forgotPasswordLink(user.email,link);
+    res.status(200).json({success:true,message:"Email sent for password reset"});
+  } catch (error) {
+    console.error('Forgot password failed:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+const postResetPassword = asyncHandler(async(req,res)=>{
+  try{
+      const id = req.params.userId;
+      const token = req.params.token;
+      const {newPassword,cnfPassword} = req.body;
+      if(newPassword !== cnfPassword) {
+        console.log("Password do not password");
+        res.status(400).json({error:"passwords didn't match"});
+        return;
+    }
+    const validUser = await User.findOne({_id:id});
+    if(!validUser) {
+      console.log("not a valid user")
+      res.status(404).json({error:"Not a Valid User"});
+      return;
+    }
+    const secret = process.env.JWT_SECRET + validUser.password;
+    const payload = jwt.verify(token, secret);
+
+    const hashPassword = await bcrypt.hash(newPassword, 12);
+
+    const user = await User.findOneAndUpdate({_id: payload.id, email: payload.email}, {
+        password: hashPassword
+    }, {new: true});
+
+    if(!user) {
+      console.log("user not found");
+       res.status(404).json({error:"User not found"});
+        return;
+    }
+    
+    res.status(200).json({success:true,message:"password updated successfully"});
+} catch(err) {
+    console.log("internal server error");
+    res.status(500).json({error:"Internal Server error"})
+}
+})
+module.exports = { registerUser, authUser , allUsers, updateUser,updatePassword,forgotPassoword,postResetPassword};
