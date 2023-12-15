@@ -79,8 +79,9 @@ const SideDrawer = () => {
     darkMode,
     setDarkMode,
   } = ChatState();
-  const handleSearch = async () => {
-    if (!search) {
+  const handleSearch = async (query) => {
+    setSearch(query);
+    if (!query) {
       toast({
         title: "Please Enter something in search",
         status: "warning",
@@ -244,8 +245,7 @@ const SideDrawer = () => {
               <Input
                 placeholder="Search by name or email"
                 mr={2}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e)=>handleSearch(e.target.value)}
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
