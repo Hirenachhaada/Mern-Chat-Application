@@ -7,7 +7,7 @@ import { Button } from "@chakra-ui/react";
 import { set } from "mongoose";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -107,6 +107,9 @@ const Login = () => {
           </Button>
         </InputGroup>
       </FormControl>
+      <div style={{ marginLeft: "-330px", marginBottom: "5px" }}>
+        <Link to="/forgotpassword">Forgot Passoword?</Link>
+      </div>
       <Button
         colorScheme="blue"
         width="100%"
