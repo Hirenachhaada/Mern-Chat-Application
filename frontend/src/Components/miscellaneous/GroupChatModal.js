@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
+import { Button,Image } from "@chakra-ui/react";
 import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import axios from "axios";
@@ -227,6 +227,12 @@ const GroupChatModal = ({ children }) => {
                 }}
               />
             </FormControl>
+            {isOpen && pic && <Image src={pic} />}
+              {useEffect(() => {
+                 if (!isOpen) {
+                   setPic("");
+                  }
+                }, [isOpen])}
             <Box display="flex" w="100%" flexWrap="wrap">
               {selectedUsers.length > 0 &&
                 selectedUsers.map((user) => (

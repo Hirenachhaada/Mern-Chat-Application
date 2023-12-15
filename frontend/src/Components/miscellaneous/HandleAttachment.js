@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,7 +12,7 @@ import {
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
+import { Button,Image } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { AttachmentIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -152,6 +152,12 @@ const HandleAttachment = () => {
                   postDetails(ev.target.files[0]);
                 }}
               />
+              {isOpen && pic && <Image src={pic} />}
+              {useEffect(() => {
+                 if (!isOpen) {
+                   setPic("");
+                  }
+                }, [isOpen])}
             </FormControl>
           </ModalBody>
 
