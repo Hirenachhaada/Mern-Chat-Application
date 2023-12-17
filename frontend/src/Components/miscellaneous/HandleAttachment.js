@@ -152,7 +152,7 @@ const HandleAttachment = () => {
                   postDetails(ev.target.files[0]);
                 }}
               />
-              {isOpen && pic && <Image src={pic} />}
+              {isOpen && pic && <embed src={pic}/>}
               {useEffect(() => {
                  if (!isOpen) {
                    setPic("");
