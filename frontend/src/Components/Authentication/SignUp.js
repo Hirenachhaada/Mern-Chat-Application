@@ -107,9 +107,16 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      toast({
+        title: "Please check your email for verification link",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
       setLoading(false);
-      history.push("/chats");
+      history.push("/");
+      window.location.reload();
     } catch (err) {
       toast({
         title: "Error Occured",
