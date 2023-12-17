@@ -3,7 +3,7 @@ import { VStack } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button,Image } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -205,6 +205,7 @@ const SignUp = () => {
           }}
         />
       </FormControl>
+             {pic && <Image src={pic} />}
       <Button
         colorScheme="blue"
         width="100%"

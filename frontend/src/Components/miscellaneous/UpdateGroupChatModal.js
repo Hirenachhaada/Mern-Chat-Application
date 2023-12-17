@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react";
+import { Input,Image } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect } from "react";
 import UserBadgeItem from "../UserAvatar/UserBadgeItem";
@@ -428,7 +428,14 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
               >
                 Update
               </Button>
+              
             </FormControl>
+              {isOpen && pic && <Image src={pic} />}
+                {useEffect(() => {
+                 if (!isOpen) {
+                   setPic("");
+                  }
+                }, [isOpen])}
             <FormControl>
               <FormLabel>Add User to Group</FormLabel>
               <Input

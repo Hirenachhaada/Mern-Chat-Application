@@ -13,7 +13,7 @@ import {
 import { VStack } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 // import Lorem from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { ViewIcon } from "@chakra-ui/icons";
@@ -210,6 +210,12 @@ const UpdateProfile = ({ user, children }) => {
                   }}
                 />
               </FormControl>
+              {isOpen && pic && <Image src={pic} />}
+              {useEffect(() => {
+                 if (!isOpen) {
+                   setPic("");
+                  }
+                }, [isOpen])}
               <span style={{ color: "red" }}>
                 Note: You will be logged out on updating your profile
               </span>
