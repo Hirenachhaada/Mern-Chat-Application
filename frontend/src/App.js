@@ -6,6 +6,7 @@ import ChatPage from "./Pages/ChatPage";
 import VideoChat from "./Components/VideoChat";
 import ForgotPassword from "./Components/Authentication/ForgotPassword";
 import ResetPassword from "./Components/Authentication/ResetPassword";
+import emailVerify from "./Components/Authentication/emailVerify";
 import Login from "./Components/Authentication/Login";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path="/chat" component={ChatPage} />
       <Route path="/videochat" component={VideoChat} />
       <Route path="/forgotpassword" component={ForgotPassword} />
+      <Route path="/verify/:token" component={emailVerify} />
       <Route
         path="/resetForgotPassword/:userId/:token"
         component={ResetPassword}

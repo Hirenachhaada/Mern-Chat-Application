@@ -2,8 +2,10 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
+const crypto = require("crypto");
 const generateToken = require("../config/generateToken");
 const passwordMailer = require("../mailers/password_mailer")
+const sendEmail = require("../mailers/verification_mailer")
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -18,25 +20,23 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User already exists");
   }
-
+  const emailToken = crypto.randomBytes(64).toString("hex");
   // if user does not exist then create a new user
   const user = await User.create({
     name,
     email,
     password,
     pic,
+    is_verified: false,
+    emailToken,
   });
 
+  //Send verification email
+  sendEmail(name, email, emailToken)
   // if user is created then send the user details
 
   if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
+    res.status(200).json({success:true,message:"Email sent for account verification"});
   } else {
     res.status(400);
     throw new Error("Invalid user data");
@@ -47,6 +47,7 @@ const authUser= await = asyncHandler(async(req,res)=>{
      const {email, password} = req.body;
      const user = await User.findOne({email});
      if(user && (await user.matchPassword(password))){
+      if (user.is_verified) {
             res.json({
                  _id: user._id,
                  name: user.name,
@@ -54,11 +55,52 @@ const authUser= await = asyncHandler(async(req,res)=>{
                  pic: user.pic,
                  token: generateToken(user._id),
             })
+          }
+        else {
+          res.status(401);
+          throw new Error("Please verify your email address");
+        }
      }
      else{
             res.status(401);
             throw new Error("Invalid email or password");
      }
+});
+
+const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+
+  // Find the user by the email token
+  const user = await User.findOne({ emailToken: token });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid verification token");
+  }
+
+  // Check if the user is not already verified
+  if (!user.is_verified) {
+    // Set is_verified to true
+    user.is_verified = true;
+    
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        token: generateToken(user._id),
+      },
+    });
+  } else {
+    // If the user is already verified
+    res.status(400);
+    throw new Error("User is already verified");
+  }
 });
 
 // asking query using the url
@@ -199,4 +241,4 @@ const postResetPassword = asyncHandler(async(req,res)=>{
     res.status(500).json({error:"Internal Server error"})
 }
 })
-module.exports = { registerUser, authUser , allUsers, updateUser,updatePassword,forgotPassoword,postResetPassword};
+module.exports = { registerUser, authUser , allUsers, updateUser,updatePassword,forgotPassoword,postResetPassword, verifyEmail};
