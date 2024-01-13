@@ -180,14 +180,34 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
     }
   };
 
+  function linkify(message) {
+    const contentWithLinks = message.replace(
+      /(https?:\/\/\S+)/g,
+      '<a href="$1" target="_blank" style="color: blue; text-decoration: underline;">$1</a>'
+    );
+    return contentWithLinks;
+  }
+
   function NewlineText(props) {
-    const text = props.text;
+    let text = props.text;
     if (!text) {
       return null;
     }
-    const newText = text.split("\n").map((str) => <p>{str}</p>);
 
-    return newText;
+    const linkifiedText = linkify(text);
+
+    // Use dangerouslySetInnerHTML for linkified content
+    const linkifiedContent = {
+      __html: linkifiedText,
+    };
+
+    // Render linkified content
+    return (
+      <div
+        dangerouslySetInnerHTML={linkifiedContent}
+        style={{ whiteSpace: "pre-wrap" }}
+      />
+    );
   }
 
   return (
@@ -255,7 +275,7 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                       }}
                     >
                       {m.image && Check(m.image)}
-                      <NewlineText text={m.content} />
+                      {/* <NewlineText text={m.content} /> */}
                       {m.image && type == 1 ? (
                         <Box
                           boxSize="sm"
@@ -316,6 +336,9 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
                       ) : (
                         <> </>
                       )}
+                      <p>
+                        <NewlineText text={m.content} />
+                      </p>
                       <span
                         className="arrowIcon"
                         onClick={() => {
