@@ -14,7 +14,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please fill all the fields");
   }
-  console.log(password);
   // check if user already exists
   let userExist = await User.findOne({ email });
   if (userExist) {
@@ -22,9 +21,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
   // if user does not exist then create a new user
-  // let password1 = password;
-  const hashedNewPassword = await bcrypt.hash(password, 10);
-  console.log(hashedNewPassword);
 
   const user = await User.create({
     name,
@@ -63,7 +59,7 @@ const verifyUser = asyncHandler(async (req, res) => {
   // const { userId, token } = req.params;
   const userId = req.params.id;
   const token = req.params.token;
-  console.log(userId, token);
+  // console.log(userId, token);
   const user = await Token.findOne({ _userId: userId });
   if (!user) {
     res.status(400);
@@ -150,17 +146,17 @@ const allUsers = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.params.userId;
-  console.log(id);
+  // console.log(id);
   try {
     const updated = await User.findById(id);
-    console.log(req.body.name);
-    console.log(req.body.name == undefined);
+    // console.log(req.body.name);
+    // console.log(req.body.name == undefined);
     if (req.body.name != undefined) {
       console.log("in if");
       updated.name = req.body.name;
     }
-    console.log(updated.name);
-    console.log(req.body.pic == "");
+    // console.log(updated.name);
+    // console.log(req.body.pic == "");
     if (req.body.pic != "") {
       console.log("in if pic ");
       updated.pic = req.body.pic;
