@@ -101,15 +101,22 @@ const SignUp = () => {
       );
       console.log(data);
       toast({
-        title: "Registered Successfully",
+        title: "Email Sent",
         status: "success",
         duration: 5000,
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      // localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      history.push("/chats");
+      console.log("Email Sent ");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPass("");
+      setPic("");
+      // history.push("/chats");
+      history.push("/");
     } catch (err) {
       toast({
         title: "Error Occured",

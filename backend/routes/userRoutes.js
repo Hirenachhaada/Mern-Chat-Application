@@ -5,6 +5,7 @@ const {
   updatePassword,
   forgotPassoword,
   postResetPassword,
+  verifyUser,
 } = require("../controllers/userControllers");
 const { authUser } = require("../controllers/userControllers");
 const { allUsers } = require("../controllers/userControllers");
@@ -17,4 +18,5 @@ router.route("/:userId").put(protect, updateUser);
 router.route("/:userId/updatepassword").put(protect, updatePassword);
 router.route("/forgot-password").post(forgotPassoword);
 router.route("/:userId/:token/postResetPassword").post(postResetPassword);
+router.route("/:id/verify/:token").get(verifyUser);
 module.exports = router;

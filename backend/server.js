@@ -33,9 +33,9 @@ connectDB();
 // }
 // -------------------------Deployment-------------------------
 const corsOptions = {
-    origin: "*",
-    credentials: true, //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -63,7 +63,7 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   // console.log("conncted to socket.io".blue.bold.underline);
   socket.on("setup", (userData) => {
-    console.log("in setup");
+    // console.log("in setup");
     socket.join(userData._id);
     socket.emit("connected");
     // console.log(userData._id);

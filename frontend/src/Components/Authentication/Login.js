@@ -132,7 +132,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// MongoDb UserName: achhadahiren201
-// MongoDb Password: Hhappy123
-// MongoDb Connection String: mongodb+srv://achhadahiren201:<password>@cluster0.w1hwyrp.mongodb.net/?retryWrites=true&w=majority

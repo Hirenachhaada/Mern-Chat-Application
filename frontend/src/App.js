@@ -7,6 +7,7 @@ import VideoChat from "./Components/VideoChat";
 import ForgotPassword from "./Components/Authentication/ForgotPassword";
 import ResetPassword from "./Components/Authentication/ResetPassword";
 import Login from "./Components/Authentication/Login";
+import EmailVerify from "./Components/Authentication/EmailVerify";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         component={ResetPassword}
       />
       <Route path="/login" component={Login} />
+      <Route path="/user/:id/verify/:token" component={EmailVerify} />
     </div>
   );
 }

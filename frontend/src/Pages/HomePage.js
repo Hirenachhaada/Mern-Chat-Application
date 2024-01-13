@@ -9,6 +9,7 @@ import AudioRecorder from "../Components/miscellaneous/AudioRecorder";
 import { styled } from "@mui/system";
 // import { makeStyles } from "@mui/styles";
 import VideoChat from "../Components/VideoChat";
+import ForgotPassword from "../Components/Authentication/ForgotPassword";
 
 // const useStyles = makeStyles((theme) => ({}));
 
@@ -50,6 +51,9 @@ const HomePage = () => {
             </TabPanel>
             <TabPanel>
               <SignUp />
+            </TabPanel>
+            <TabPanel>
+              <ForgotPassword />
             </TabPanel>
           </TabPanels>
         </Tabs>
