@@ -64,32 +64,28 @@ const HandleAiChats = () => {
       });
       return;
     }
-    // axios
-    //   .post("/api/message/chatbot", { message })
-    //   .then((res) => {
-    //     setReply(res.data.reply);
-    //     toast({
-    //       title: "Response Generated",
-    //       status: "success",
-    //       duration: 3000,
-    //       isClosable: true,
-    //       position: "bottom",
-    //     });
-    //     displayAnimatedReply();
-    //   })
-    //   .catch((err) => {
-    //     toast({
-    //       title: "Error Generating Response",
-    //       status: "error",
-    //       duration: 3000,
-    //       isClosable: true,
-    //       position: "bottom",
-    //     });
-    //   });
-    setReply(
-      "Subject: Happy Birthday Wishes! \nDear Happy,Wishing you a very happy birthday filled with love, joy, and laughter! May this special day bring you lots of happiness and wonderful memories to cherish. \nI hope your day is as amazing as you are, surrounded by family and friends who make you feel loved and appreciated. Remember to take some time to celebrate yourself and all the incredible qualities that make you unique.\nMay the year ahead be filled with exciting adventures, success in all your endeavors, and good health. Enjoy every moment of your special day and make it a birthday to remember!\nHappy Birthday once again!\nWarm regards,\nHiren"
-    );
-    displayAnimatedReply();
+    axios
+      .post("/api/message/chatbot", { message })
+      .then((res) => {
+        setReply(res.data.reply);
+        toast({
+          title: "Response Generated",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+        displayAnimatedReply();
+      })
+      .catch((err) => {
+        toast({
+          title: "Error Generating Response",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+      });
   };
 
   return (
