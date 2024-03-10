@@ -181,10 +181,15 @@ const ScrollableChat = ({ messages, disappearingChat, setMessages }) => {
   };
 
   function linkify(message) {
-    const contentWithLinks = message.replace(
-      /(https?:\/\/\S+)/g,
-      '<a href="$1" target="_blank" style="color: blue; text-decoration: underline;">$1</a>'
-    );
+    const contentWithLinks = darkMode
+      ? message.replace(
+          /(https?:\/\/\S+)/g,
+          '<a href="$1" target="_blank" style="color: #28E8FF; text-decoration: underline;">$1</a>'
+        )
+      : message.replace(
+          /(https?:\/\/\S+)/g,
+          '<a href="$1" target="_blank" style="color: blue; text-decoration: underline;">$1</a>'
+        );
     return contentWithLinks;
   }
 

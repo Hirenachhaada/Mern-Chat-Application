@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalCloseButton,
   IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
@@ -133,8 +134,9 @@ const HandleAttachment = () => {
   const finalRef = React.useRef(null);
   return (
     <div>
-      <IconButton icon={<AttachmentIcon />} onClick={onOpen}></IconButton>
-
+      <Tooltip label="Add Attachments" hasArrow placement="bottom-end">
+        <IconButton icon={<AttachmentIcon />} onClick={onOpen}></IconButton>
+      </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

@@ -10,7 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { Textarea } from "@chakra-ui/react";
-import { ArrowBackIcon, DownloadIcon, RepeatClockIcon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  DownloadIcon,
+  RepeatClockIcon,
+  StarIcon,
+} from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
@@ -25,6 +30,7 @@ import animationData from "../animation/typing.json";
 import DownloadChat from "./DownloadChat";
 import { Tooltip } from "@chakra-ui/tooltip";
 import HandleAttachment from "./miscellaneous/HandleAttachment";
+import HandleAiChats from "./miscellaneous/HandleAiChats";
 
 // import { AiTwotoneVideoCamera } from "@react-icons/fa";
 // import { IconButton } from "@chakra-ui/react";
@@ -111,18 +117,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, []);
 
   const submitMessage = async (event) => {
-    if (event.key === "Enter") 
-    {
+    if (event.key === "Enter") {
       // Prevent the default behavior of the Enter key (e.g., submitting a form)
       event.preventDefault();
-  
+
       // If Shift key is pressed along with Enter, add a newline character
       if (event.shiftKey) {
         setNewMessage((prevMessage) => prevMessage + "\n");
       } else if (newMessage.trim() !== "") {
         // If only Enter is pressed and the message is not empty, send the message
         socket && socket.emit("stop typing", selectedChat._id);
-  
+
         try {
           const config = {
             headers: {
@@ -130,7 +135,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               Authorization: `Bearer ${user.token}`,
             },
           };
-  
+
           const { data } = await axios.post(
             "/api/message",
             {
@@ -140,7 +145,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             },
             config
           );
-  
+
           socket && socket.emit("new message", data);
           setNewMessage("");
           setMessages([...messages, data]);
@@ -189,13 +194,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnnected) return;
@@ -219,7 +223,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   };
 
-  
   return (
     <>
       {selectedChat ? (
@@ -257,7 +260,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     <IconButton icon={<PhoneIcon />}></IconButton>
                   </a>
                 </Tooltip>
-                <ScheduleMessage />
+                <Tooltip
+                  label="Click for Schedule Message"
+                  hasArrow
+                  placement="bottom-end"
+                >
+                  <ScheduleMessage />
+                </Tooltip>
               </>
             ) : (
               <>
@@ -355,9 +364,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   icon={!disappearingChat ? <TimeIcon /> : <ChatIcon />}
                 />
               </Tooltip>
-              <Tooltip label="Send Attachments">
-                <HandleAttachment user={user} />
-              </Tooltip>
+              <HandleAttachment user={user} />
+              <HandleAiChats />
             </FormControl>
           </Box>
         </>
@@ -384,4 +392,3 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 };
 
 export default SingleChat;
-

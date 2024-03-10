@@ -106,11 +106,13 @@ const ScheduleMessage = () => {
   const currentDate = new Date();
   return (
     <>
-      <IconButton icon={<RepeatClockIcon />} onClick={onOpen}></IconButton>
+      <Tooltip label="Schedule Message" hasArrow placement="bottom-end">
+        <IconButton icon={<RepeatClockIcon />} onClick={onOpen}></IconButton>
+      </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Schedule Message</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input

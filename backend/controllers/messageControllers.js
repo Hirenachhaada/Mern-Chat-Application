@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../models/message"); // message model
 const Chat = require("../models/chatModel"); // chat model
 const User = require("../models/userModel"); // user model
+const axios = require("axios");
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId, disappearMode, image, scheduledAt } = req.body;
   console.log(image);
@@ -78,4 +79,39 @@ const deleteMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { sendMessage, allMessages, sendAudioMessage, deleteMessage };
+const aiMessage = asyncHandler(async (req, res) => {
+  const { message } = req.body;
+  console.log("message:", message);
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: message },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
+    res.json({ reply });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+module.exports = {
+  sendMessage,
+  allMessages,
+  sendAudioMessage,
+  deleteMessage,
+  aiMessage,
+};
