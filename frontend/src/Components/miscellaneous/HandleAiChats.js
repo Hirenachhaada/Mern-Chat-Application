@@ -19,35 +19,13 @@ import { useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
-const HandleAiChats = () => {
+const HandleAiChats = ({ aiMessage, setAiMessage }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [message, setMessage] = useState("");
   const [reply, setReply] = useState("");
-
-  const [animatedReply, setAnimatedReply] = useState("");
   const toast = useToast();
 
   const textAreaRef = useRef(null);
-  useEffect(() => {
-    setAnimatedReply("");
-  }, [reply]);
-  useEffect(() => {
-    // Scroll down the Textarea when animatedReply changes
-    if (textAreaRef.current) {
-      textAreaRef.current.scrollTop = textAreaRef.current.scrollHeight;
-    }
-  }, [animatedReply]);
-  const displayAnimatedReply = () => {
-    let index = 0;
-    const intervalId = setInterval(() => {
-      if (index < reply.length) {
-        setAnimatedReply((prev) => prev + reply[index]);
-        index += 1;
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 20);
-  };
   const handleModalClose = () => {
     setMessage(""); // Clear the message state
     setReply(""); // Clear the reply state
@@ -75,7 +53,6 @@ const HandleAiChats = () => {
           isClosable: true,
           position: "bottom",
         });
-        displayAnimatedReply();
       })
       .catch((err) => {
         toast({
@@ -122,9 +99,9 @@ const HandleAiChats = () => {
                 p={1}
                 my={2}
                 placeholder="Response"
-                value={animatedReply}
+                value={reply}
                 onChange={(ev) => {
-                  setAnimatedReply(ev.target.value);
+                  setReply(ev.target.value);
                 }}
                 height={200}
                 ref={textAreaRef}
@@ -147,7 +124,7 @@ const HandleAiChats = () => {
               colorScheme="blue"
               mr={3}
               onClick={(e) => {
-                navigator.clipboard.writeText(animatedReply);
+                navigator.clipboard.writeText(reply);
                 toast({
                   title: "Copied to Clipboard",
                   status: "success",
@@ -155,6 +132,7 @@ const HandleAiChats = () => {
                   isClosable: true,
                   position: "bottom",
                 });
+                setAiMessage(reply);
               }}
             >
               Copy to MessageBar

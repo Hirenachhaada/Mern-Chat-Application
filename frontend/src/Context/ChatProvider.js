@@ -10,6 +10,7 @@ const ChatProvider = ({ children }) => {
   const [notification, setNotification] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [chats, setChats] = useState([]);
+  const [aiMessage, setAiMessage] = useState("");
   let history = useHistory();
   // console.log(history);
   useEffect(() => {
@@ -35,6 +36,8 @@ const ChatProvider = ({ children }) => {
         setNotification,
         darkMode,
         setDarkMode,
+        aiMessage,
+        setAiMessage,
       }}
     >
       {children}

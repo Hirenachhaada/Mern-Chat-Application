@@ -47,6 +47,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     notification,
     setNotification,
     darkMode,
+    aiMessage,
+    setAiMessage,
   } = ChatState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -92,6 +94,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    setNewMessage(aiMessage);
+  }, [aiMessage]);
 
   useEffect(() => {
     // console.log("new useEffect", socket);
@@ -365,7 +371,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 />
               </Tooltip>
               <HandleAttachment user={user} />
-              <HandleAiChats />
+              <HandleAiChats
+                aiMessage={aiMessage}
+                setAiMessage={setAiMessage}
+              />
             </FormControl>
           </Box>
         </>
